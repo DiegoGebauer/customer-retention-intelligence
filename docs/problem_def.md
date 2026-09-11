@@ -1,59 +1,59 @@
-# Problem Definition
+# Definición del problema
 
-## Business Question
+## Pregunta de negocio
 
-At a given snapshot date, which existing customers are most likely to repurchase within the next 90 days?
+En una fecha de corte determinada, ¿qué clientes existentes tienen mayor probabilidad de volver a comprar durante los próximos 90 días?
 
-The business objective is to identify customers with a high risk of inactivity so that retention actions can be prioritized.
+El objetivo de negocio es identificar a los clientes con mayor riesgo de inactividad para priorizar acciones de retención.
 
-## Eligible Customers
+## Clientes elegibles
 
-A customer is considered eligible if they placed at least one qualifying order on or before the snapshot date.
+Un cliente se considera elegible si realizó al menos una orden que cumple los criterios del análisis en la fecha de corte o antes de ella.
 
-For this provisional analysis, qualifying orders have one of the following statuses:
+Para este análisis provisional, se consideran las órdenes con alguno de los siguientes estados:
 
 - Complete
 - Shipped
 - Processing
 
-Cancelled and Returned orders are excluded.
+Se excluyen las órdenes con estado Cancelled o Returned.
 
-## Target
+## Variable objetivo
 
-`repurchase_90d = 1` if the customer places at least one qualifying order in the interval:
+`repurchase_90d = 1` si el cliente realiza al menos una orden que cumple los criterios anteriores dentro del intervalo:
 
 `(snapshot_date, snapshot_date + 90 days]`
 
-Otherwise:
+En caso contrario:
 
 `repurchase_90d = 0`
 
-## Risk Interpretation
+## Interpretación del riesgo
 
-The model estimates:
+El modelo buscará estimar:
 
 `P(repurchase_90d = 1)`
 
-The customer's inactivity risk is calculated as:
+El riesgo de inactividad del cliente se calculará como:
 
 `inactivity_risk = 1 - P(repurchase_90d = 1)`
 
-A higher inactivity risk means that the customer is less likely to repurchase during the next 90 days.
+Un mayor riesgo de inactividad indica una menor probabilidad de que el cliente vuelva a comprar durante los próximos 90 días.
 
-## Temporal Rule
+## Regla temporal
 
-All features must be calculated using information available on or before the snapshot date.
+Todas las variables predictoras deben calcularse utilizando información disponible en la fecha de corte o antes de ella.
 
-Future information can only be used to construct the target label.
+La información futura solo puede utilizarse para construir la variable objetivo.
 
-## Provisional Horizon
+## Horizonte provisional
 
 `H = 90 days`
 
-Using the feasibility snapshot of `2026-06-08`, the 90-day horizon produced 3,671 repurchasers among 56,637 eligible customers, equivalent to a 6.48% repurchase rate.
+Con la fecha de corte exploratoria `2026-06-08`, el horizonte de 90 días permitió identificar 3.671 clientes con recompra entre 56.637 clientes elegibles, lo que equivale a una tasa de recompra del 6,48 %.
 
-The 60-day alternative produced 2,502 repurchasers, equivalent to a 4.42% repurchase rate.
+La alternativa de 60 días identificó 2.502 clientes con recompra, equivalentes a una tasa del 4,42 %.
 
-Therefore, 90 days provides approximately 47% more positive examples while maintaining a commercially interpretable prediction horizon.
+Por lo tanto, el horizonte de 90 días aporta aproximadamente un 47 % más de casos positivos y mantiene un período de predicción que puede interpretarse desde el negocio.
 
-This decision is provisional and must later be validated using multiple historical snapshots and business criteria.
+Esta decisión es provisional y deberá validarse posteriormente utilizando distintas fechas de corte históricas y criterios de negocio.
