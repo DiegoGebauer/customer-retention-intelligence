@@ -36,3 +36,5 @@ El resumen de órdenes utiliza todo el período y todos los
 estados. Para entrenar el modelo construiré una tabla por
 cliente y fecha de corte, usando únicamente la información
 disponible hasta ese momento.
+
+**Fecha de cierre:** 2026-09-11
