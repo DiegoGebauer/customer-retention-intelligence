@@ -1,13 +1,6 @@
--- =============================================================================
--- Archivo: 02_load_raw.sql
--- Propósito: construir una fotografía reproducible de las tablas utilizadas
--- desde el dataset público TheLook eCommerce.
--- La fuente corresponde a bigquery-public-data.thelook_ecommerce y las copias
--- quedan almacenadas como raw_* en el dataset retention_ml.
--- Importante: CREATE OR REPLACE reemplaza la fotografía raw existente. Por
--- este motivo, el archivo solo debe ejecutarse cuando se decida actualizar
--- intencionalmente la fuente del proyecto.
--- =============================================================================
+-- Copio las tablas de bigquery-public-data.thelook_ecommerce tal cual a mi
+-- dataset (retention_ml), como raw_*. CREATE OR REPLACE pisa la fotografía
+-- raw existente, así que solo corro esto cuando quiero actualizarla a propósito.
 
 CREATE OR REPLACE TABLE
   `customerretentionintelligence.retention_ml.raw_users`
