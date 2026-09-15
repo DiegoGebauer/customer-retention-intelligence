@@ -49,7 +49,3 @@ Separaré entrenamiento, validación y prueba por fechas, evitando mezclar aleat
 | Entrenamiento 2        | 2025-11-30     | 2026-02-28                   |
 | Validación             | 2026-03-01     | 2026-05-30                   |
 | Prueba final reservada | 2026-06-01     | 2026-08-30                   |
-
-Estas fechas son propuestas. Confirmaré la cobertura de sus ventanas antes de construir la tabla y mantendré la prueba final fuera de las decisiones de desarrollo.
-
-## Análisis exploratorio previ
