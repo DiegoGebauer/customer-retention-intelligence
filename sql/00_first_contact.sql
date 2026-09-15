@@ -1,11 +1,6 @@
--- =============================================================================
--- Archivo: 00_first_contact.sql
--- Propósito: realizar una primera comprobación del entorno de BigQuery e
--- identificar el proyecto desde el cual se ejecuta la consulta.
--- No utiliza tablas ni genera resultados persistentes. Por lo tanto, esta
--- consulta sirve únicamente como prueba inicial y no procesa datos del caso.
--- =============================================================================
-
+-- Primer chequeo del entorno: confirmo que el editor de BigQuery funciona
+-- y desde qué proyecto se está ejecutando. No toca tablas ni deja nada guardado.
+ 
 SELECT
   CURRENT_TIMESTAMP() AS execution_timestamp,
   @@project_id AS execution_project;
