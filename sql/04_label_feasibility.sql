@@ -1,15 +1,10 @@
--- =============================================================================
--- Archivo: 04_label_feasibility.sql
--- Propósito: evaluar si los horizontes de 60 y 90 días contienen suficientes
--- clientes elegibles y casos de recompra para formular el problema predictivo.
--- La fecha de snapshot se fija 90 días antes de la última fecha observada, de
--- modo que ambos horizontes puedan evaluarse utilizando información disponible.
--- De manera provisional, se consideran compras válidas los estados Complete,
--- Shipped y Processing; Cancelled y Returned se excluyen.
--- Esta comparación no busca determinar qué horizonte producirá un mejor modelo.
--- La decisión se basa en su interpretación comercial y en la disponibilidad de
--- suficientes casos positivos antes de comenzar el entrenamiento.
--- =============================================================================
+-- Comparo horizontes de 60 y 90 días para ver si hay suficientes clientes
+-- elegibles y casos de recompra como para plantear el problema. Fijo la
+-- fecha de snapshot 90 días antes de la última fecha observada, así ambos
+-- horizontes se pueden evaluar con datos disponibles. Por ahora considero
+-- compra válida los estados Complete, Shipped y Processing; excluyo
+-- Cancelled y Returned. No busco el horizonte que dé mejor modelo, sino
+-- uno con sentido de negocio y suficientes casos positivos para entrenar.
 
 WITH purchases AS (
   SELECT
