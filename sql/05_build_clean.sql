@@ -1,18 +1,13 @@
--- =============================================================================
--- Archivo: 05_build_clean.sql
--- Propósito: construir una capa clean reproducible a partir de las tablas raw,
--- sin modificar la fotografía original de la fuente.
--- Se conservan únicamente las columnas necesarias para el caso, se excluyen
--- registros sin claves o fechas indispensables y se minimiza el uso de datos
--- personales. Los estados de las órdenes se mantienen completos, debido a que
--- las reglas para features y labels se aplicarán en una etapa posterior.
--- Las tablas transaccionales se particionan por fecha y se agrupan mediante
--- las claves utilizadas con mayor frecuencia en filtros y relaciones.
--- Importante: CREATE OR REPLACE permite reconstruir la capa clean, pero también
--- reemplaza cualquier versión anterior de estas tablas.
--- =============================================================================
+-- Construyo la capa clean a partir de raw, sin tocar la fotografía original.
+-- Dejo solo las columnas necesarias, saco registros sin claves o fechas
+-- clave, y evito datos personales. Mantengo todos los estados de las
+-- órdenes; las reglas de features y labels las aplico más adelante. Las
+-- tablas transaccionales quedan particionadas por fecha y agrupadas por las
+-- claves que más uso en filtros y joins.
+-- Ojo: CREATE OR REPLACE reconstruye la capa clean, pero también pisa
+-- cualquier versión anterior.
 
--- 1. Atributos de clientes necesarios para el análisis, sin identificadores directos.
+-- Atributos de clientes, sin identificadores directos.
 CREATE OR REPLACE TABLE
   `customerretentionintelligence.retention_ml.clean_users`
 OPTIONS (
@@ -31,7 +26,7 @@ SELECT
 FROM `customerretentionintelligence.retention_ml.raw_users`
 WHERE id IS NOT NULL;
 
--- 2. Órdenes con identificadores y fecha de creación disponibles.
+-- Órdenes con id de usuario y fecha de creación disponibles.
 CREATE OR REPLACE TABLE
   `customerretentionintelligence.retention_ml.clean_orders`
 PARTITION BY DATE(created_at)
@@ -54,7 +49,7 @@ WHERE order_id IS NOT NULL
   AND user_id IS NOT NULL
   AND created_at IS NOT NULL;
 
--- 3. Detalle de productos por orden para construir posteriormente variables monetarias.
+-- Detalle de productos por orden, para variables monetarias más adelante.
 CREATE OR REPLACE TABLE
   `customerretentionintelligence.retention_ml.clean_order_items`
 PARTITION BY DATE(created_at)
@@ -77,7 +72,7 @@ WHERE id IS NOT NULL
   AND user_id IS NOT NULL
   AND created_at IS NOT NULL;
 
--- 4. Atributos de productos que podrán utilizarse para resumir el comportamiento de compra.
+-- Atributos de productos, para caracterizar el comportamiento de compra.
 CREATE OR REPLACE TABLE
   `customerretentionintelligence.retention_ml.clean_products`
 OPTIONS (
@@ -94,7 +89,7 @@ SELECT
 FROM `customerretentionintelligence.retention_ml.raw_products`
 WHERE id IS NOT NULL;
 
--- 5. Verificación de los conteos obtenidos después de la transformación.
+-- Conteos después de la transformación, para comparar contra raw.
 SELECT
   'clean_users' AS table_name,
   COUNT(*) AS row_count
