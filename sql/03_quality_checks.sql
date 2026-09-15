@@ -1,14 +1,9 @@
--- =============================================================================
--- Archivo: 03_quality_checks.sql
--- Propósito: describir la calidad de los datos antes de aplicar reglas de
--- limpieza. Se revisan la cobertura temporal, los estados de las órdenes,
--- los valores nulos, los posibles duplicados y las relaciones entre tablas.
--- Las consultas son diagnósticas y no modifican la capa raw. Si se encuentra
--- una anomalía, primero debe documentarse y luego abordarse mediante una regla
--- explícita en la capa clean.
--- =============================================================================
+-- Reviso la calidad de los datos raw antes de limpiar: cobertura de fechas,
+-- estados de las órdenes, nulos, duplicados y relación entre tablas. Son
+-- consultas de diagnóstico, no tocan la capa raw. Si aparece algo raro, lo
+-- documento y lo resuelvo con una regla explícita en la capa clean.
 
--- 1. Cobertura temporal y completitud básica de órdenes y clientes.
+-- Cobertura temporal y completitud básica de órdenes.
 SELECT
   MIN(DATE(created_at)) AS first_order_date,
   MAX(DATE(created_at)) AS last_order_date,
@@ -19,7 +14,7 @@ SELECT
   COUNTIF(user_id IS NULL) AS missing_user_id
 FROM `customerretentionintelligence.retention_ml.raw_orders`;
 
--- 2. Distribución de los estados observados en las órdenes.
+-- Distribución de los estados de las órdenes.
 SELECT
   status,
   COUNT(*) AS orders,
@@ -31,7 +26,7 @@ FROM `customerretentionintelligence.retention_ml.raw_orders`
 GROUP BY status
 ORDER BY orders DESC;
 
--- 3. Calidad de la clave order_id y relación entre órdenes y usuarios.
+-- Calidad de order_id y relación entre órdenes y usuarios.
 WITH order_quality AS (
   SELECT
     COUNT(*) AS total_rows,
@@ -52,7 +47,7 @@ SELECT *
 FROM order_quality
 CROSS JOIN orphans;
 
--- 4. Revisión básica de integridad en el detalle de productos por orden.
+-- Integridad básica del detalle de productos por orden.
 SELECT
   COUNT(*) AS total_rows,
   COUNTIF(order_id IS NULL) AS missing_order_id,
